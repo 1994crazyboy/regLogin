@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +29,6 @@ import cn.hyn123.service.impl.CaptchaServiceSingleton;
 
 @Controller
 public class UserController {
-
-	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private UserLoginService userLoginService;
@@ -264,48 +260,14 @@ public class UserController {
 	/**
 	 * 验证用户输入的验证码是否正确，如果验证码过期返回0，如果验证码不正确返回-1，验证码正确返回1
 	 * 
-	 * @param email
-	 *            用户邮箱
-	 * @param captcha
-	 *            验证码
+	 * @param email		 用户邮箱
+	 * @param captcha	 验证码
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping("/checkEmailCaptcha")
-	public @ResponseBody int checkEmailCaptcha(String email, String captcha) {
-		// 获取验证码实体类
-		EmailCaptcha userCaptcha = emCaptchaDao.getUserCaptcha(email);
-
-		logger.info("传入的邮箱为：" + email + "传入的验证码为：" + captcha);
-
-		// 如果找不到，那么返回0。表示验证码已经过期
-		if (userCaptcha == null) {
-			return 0;
-		}
-
-		// 获取当前时间和验证码产生时间
-		Date now = new Date();
-		Date createTime = userCaptcha.getCreateTime();
-
-		// 等到毫秒为单位的时间差
-		long min = now.getTime() - createTime.getTime();
-
-		// 如果验证码过期，返回0
-		if (min > 20 * 60 * 1000) {
-			System.out.println("验证码的时间为：" + min);
-			logger.info("你大爷的啊，验证码过期了！");
-			return 0;
-		} else {
-			// 判断是否输入正确的验证码
-			Boolean isOk = captcha.equals(userCaptcha.getCaptcha());
-			// 如果输入正确
-			if (isOk) {
-				logger.info("很好，验证码正确了");
-				return 1;
-			} else {
-				logger.info("卧槽，你验证码输错了！");
-				return -1;
-			}
-		}
+	public @ResponseBody int checkEmailCaptcha(String email, String captcha) throws Exception {
+		return emailCaptchaService.checkEmailCaptcha(email, captcha);
 	}
 
 	/**

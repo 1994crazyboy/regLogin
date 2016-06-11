@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 配置mapper,mybatis通过使用mapper实现dao接口 -->
+<mapper namespace="cn.hyn123.dao.UserDao">
+
+	<!-- 查找用户，通过id、email、userName、phone -->
+	<select id="findUserById" resultType="User" parameterType="int">
+		SELECT * FROM USER WHERE id = #{id}
+	</select>
+	<select id="findUserByEmail" resultType="User" parameterType="java.lang.String">
+		SELECT * FROM USER WHERE email = #{email}
+	</select>
+	<select id="findUserByUserName" resultType="User" parameterType="java.lang.String">
+		SELECT * FROM USER WHERE userName = #{userName}
+	</select>
+	<select id="findUserByPhone" resultType="User" parameterType="java.lang.String">
+		SELECT * FROM USER WHERE email = #{phone}
+	</select>
+
+	<!-- 新增用户 -->
+	<insert id="insertUser">
+		INSERT INTO USER
+		(userName,passWord,regTime,phone,email)
+		VALUE
+		(#{userName},#{passWord},#{regTime},#{phone},#{email})
+	</insert>
+
+	<!-- 删除用户 -->
+	<delete id="deleteUser">
+		DELETE FROM USER WHERE id = #{id}
+	</delete>
+
+	<!-- 更新用户 更改密码、更改邮箱、更改手机 -->
+	<update id="midifyPassWord">
+		UPDATE USER SET
+		passWord=#{newPassWord}
+		WHERE userName=#{userName}
+	</update>
+	<update id="midifyEmail">
+		UPDATE USER SET
+		email=#{newEmail}
+		WHERE userName=#{userName}
+	</update>
+	<update id="midifyPhone">
+		UPDATE USER SET
+		phone=#{newPhone}
+		WHERE userName=#{userName}
+	</update>
+
+	<update id="activateUser">
+		UPDATE USER SET
+		status=1
+		WHERE email=#{email}
+	</update>
+
+
+
+
+</mapper>

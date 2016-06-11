@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.hyn123.dao.UserDao;
 import cn.hyn123.entities.User;
-import cn.hyn123.service.UserReg;
+import cn.hyn123.service.UserRegService;
 
 @Service
-public class UserRegImpl implements UserReg {
+public class UserRegServiceImpl implements UserRegService {
 
 	@Autowired
 	private UserDao userDao;

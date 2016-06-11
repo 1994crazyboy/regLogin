@@ -1,6 +1,7 @@
 package cn.hyn123.service.impl;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -15,14 +16,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.hyn123.dao.EmailCaptchaDao;
 import cn.hyn123.dao.UserDao;
-import cn.hyn123.service.SendEmail;
+import cn.hyn123.entities.EmailCaptcha;
+import cn.hyn123.service.EmailCaptchaService;
 
 @Service
-public class SendEmailImpl implements SendEmail {
+public class EmailCaptchaServiceImpl implements EmailCaptchaService {
 	@Autowired
 	private UserDao userDao;
-	
+	@Autowired
+	private EmailCaptchaDao emailCaptchaDao;
+
 	@Transactional
 	@Override
 	public void sendEmail(String email, String captcha) throws Exception {
@@ -58,6 +63,38 @@ public class SendEmailImpl implements SendEmail {
 		 * 第三步发送邮件
 		 */
 		Transport.send(msg);
+	}
+
+	@Override
+	public int checkEmailCaptcha(String email, String captcha) throws Exception {
+		// 获取验证码实体类
+		EmailCaptcha userCaptcha = emailCaptchaDao.getUserCaptcha(email);
+
+		// 如果找不到，那么返回0。表示验证码已经过期
+		if (userCaptcha == null) {
+			return 0;
+		}
+
+		// 获取当前时间和验证码产生时间
+		Date now = new Date();
+		Date createTime = userCaptcha.getCreateTime();
+
+		// 等到毫秒为单位的时间差
+		long min = now.getTime() - createTime.getTime();
+
+		// 如果验证码过期，返回0
+		if (min > 20 * 60 * 1000) {
+			return 0;
+		} else {
+			// 判断是否输入正确的验证码
+			Boolean isOk = captcha.equals(userCaptcha.getCaptcha());
+			// 如果输入正确
+			if (isOk) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
 	}
 
 }

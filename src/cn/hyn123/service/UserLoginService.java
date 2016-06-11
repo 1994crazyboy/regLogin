@@ -6,7 +6,7 @@ package cn.hyn123.service;
  * @author Administrator
  *
  */
-public interface UserLogin {
+public interface UserLoginService {
 	
 	/**
 	 * 用户登录，根据邮箱进行登录

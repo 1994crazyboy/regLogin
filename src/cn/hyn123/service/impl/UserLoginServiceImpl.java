@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.hyn123.algorithm.MD5;
 import cn.hyn123.dao.UserDao;
 import cn.hyn123.entities.User;
-import cn.hyn123.service.UserLogin;
+import cn.hyn123.service.UserLoginService;
 
 @Service
-public class UserLoginImpl implements UserLogin {
+public class UserLoginServiceImpl implements UserLoginService {
 	
 	@Autowired
 	private UserDao userDao;

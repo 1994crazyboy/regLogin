@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface Captcha {
+public interface CaptchaService {
 
 	/**
 	 * 生成验证码

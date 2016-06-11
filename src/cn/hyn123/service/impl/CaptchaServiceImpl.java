@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.octo.captcha.service.CaptchaServiceException;
 
-import cn.hyn123.service.Captcha;
+import cn.hyn123.service.CaptchaService;
 
 @Service
-public class CaptchaImpl implements Captcha {
+public class CaptchaServiceImpl implements CaptchaService {
 
 	@Override
 	public void genernateCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {

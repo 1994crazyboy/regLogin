@@ -8,7 +8,7 @@ import cn.hyn123.entities.User;
  * @author Administrator
  *
  */
-public interface UserReg {
+public interface UserRegService {
 	
 	/**
 	 * 用户注册

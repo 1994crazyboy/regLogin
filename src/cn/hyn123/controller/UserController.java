@@ -22,11 +22,11 @@ import cn.hyn123.dao.EmailCaptchaDao;
 import cn.hyn123.dao.UserDao;
 import cn.hyn123.entities.EmailCaptcha;
 import cn.hyn123.entities.User;
-import cn.hyn123.service.Captcha;
-import cn.hyn123.service.SendEmail;
-import cn.hyn123.service.UserLogin;
-import cn.hyn123.service.UserReg;
-import cn.hyn123.service.UserSetting;
+import cn.hyn123.service.CaptchaService;
+import cn.hyn123.service.EmailCaptchaService;
+import cn.hyn123.service.UserLoginService;
+import cn.hyn123.service.UserRegService;
+import cn.hyn123.service.UserSettingService;
 import cn.hyn123.service.impl.CaptchaServiceSingleton;
 
 @Controller
@@ -35,15 +35,15 @@ public class UserController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private UserLogin userLogin;
+	private UserLoginService userLoginService;
 	@Autowired
-	private UserReg userReg;
+	private UserRegService userRegService;
 	@Autowired
-	private UserSetting userSetting;
+	private UserSettingService userSettingService;
 	@Autowired
-	private Captcha captcha;
+	private CaptchaService captchaService;
 	@Autowired
-	private SendEmail sendEmail;
+	private EmailCaptchaService emailCaptchaService;
 	
 	@Autowired
 	private UserDao userDao;
@@ -108,7 +108,7 @@ public class UserController {
 		user.setStatus((byte) 0);
 
 		// UserReg注册用户
-		userReg.reg(user);
+		userRegService.reg(user);
 
 		// 设置传到前台的信息和视图名称
 
@@ -138,7 +138,7 @@ public class UserController {
 
 		ModelAndView modelAndView = new ModelAndView();
 		// 登录用户，并将登录后的状态码返回，如果是0用户不存在，如果是1那么密码错误，如果是2那么密码正确
-		int result = userLogin.login(email, passWord);
+		int result = userLoginService.login(email, passWord);
 
 		// 查找这个用户
 		User user = userDao.findUserByEmail(email);
@@ -215,7 +215,7 @@ public class UserController {
 	 */
 	@RequestMapping("/captcha")
 	public @ResponseBody void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		captcha.genernateCaptchaImage(request, response);
+		captchaService.genernateCaptchaImage(request, response);
 		isCaptcha = Boolean.FALSE;
 	}
 
@@ -247,7 +247,7 @@ public class UserController {
 		String captcha = getCaptcha();
 		
 		//发送邮件
-		sendEmail.sendEmail(email, captcha);
+		emailCaptchaService.sendEmail(email, captcha);
 
 		// 发送成功之后将验证码保存到数据库
 		EmailCaptcha emailCaptcha = new EmailCaptcha();
@@ -319,7 +319,7 @@ public class UserController {
 		Boolean isOk=captcha.equals(emailCaptcha.getCaptcha());
 		//如果验证码正确
 		if(isOk){
-			userSetting.activateUser(email);
+			userSettingService.activateUser(email);
 			return 1;
 		}
 		return 0;

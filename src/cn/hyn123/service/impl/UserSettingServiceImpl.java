@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.hyn123.dao.EmailCaptchaDao;
 import cn.hyn123.dao.UserDao;
-import cn.hyn123.service.UserSetting;
+import cn.hyn123.service.UserSettingService;
 
 @Service
-public class UserSettingImpl implements UserSetting {
+public class UserSettingServiceImpl implements UserSettingService {
 
 	@Autowired
 	private UserDao userDao;

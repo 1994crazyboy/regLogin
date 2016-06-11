@@ -9,7 +9,7 @@ package cn.hyn123.service;
  * @author Administrator
  *
  */
-public interface UserSetting {
+public interface UserSettingService {
 
 	/**
 	 * 绑定用户手机
